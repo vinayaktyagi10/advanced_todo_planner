@@ -45,7 +45,7 @@ cd advanced_todo_planner```
 
 ```flutter run```
 
-## Usage
+### Usage
 
 - Tap the + floating action button to add a new task.
 
@@ -55,7 +55,7 @@ cd advanced_todo_planner```
 
 - Tap the trash icon to delete a task.
 
-## Planned Features
+### Planned Features
 
 - Auto-remove tasks after 24 hours or on day change
 
@@ -65,16 +65,16 @@ cd advanced_todo_planner```
 
 - Dark mode support
 
-## Contributing
+### Contributing
 
 Feel free to open issues or submit pull requests.
 Please follow the code style and add tests where applicable.
 
-## License
+### License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
 
-## Contact
+### Contact
 
 Created by Vinayak Tyagi- vinayaktaygi.ed@gmail.com
 GitHub: https://github.com/vinayaktyagi10
