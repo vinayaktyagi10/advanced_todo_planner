@@ -76,7 +76,7 @@ TextButton(
 	void _removeExpiredTasks(){
 		setState((){
 		 _tasks.removeWhere((task) =>
-			DateTime.now().difference(task.createdAt).inDays >=1);
+		task.isDone && DateTime.now().difference(task.createdAt).inHours>=24);
 });
 	}
 Widget build(BuildContext context){
