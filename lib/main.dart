@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
 import 'models/task.dart';
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'screens/task_screen.dart';
-void main() {
-  runApp(const MyApp());
+void main() async {	//async is used to access await command and wait for important libraries to load such as of hive.
+	WidgetsFlutterBinding.ensureInitialized();	//makes sure that the flutter is fully loaded before running anything else.
+	await Hive.initFlutter(); 	//waits for the storage engine to initialize
+	Hive.registerAdapter(TaskAdapter());	//basically the adapter converts the info into binary for further storage.
+	await Hive.openBox<Task>('tasks');	//opens a box that basically saves,loads,delete etc.
+  	runApp(const MyApp());		//finally the UI is shown.
 }
 
 class MyApp extends StatelessWidget {
