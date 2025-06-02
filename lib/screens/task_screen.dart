@@ -69,6 +69,16 @@ TextButton(
 	
 
 @override
+	void initState(){
+		super.initState();
+		_removeExpiredTasks();
+	}
+	void _removeExpiredTasks(){
+		setState((){
+		 _tasks.removeWhere((task) =>
+			DateTime.now().difference(task.createdAt).inDays >=1);
+});
+	}
 Widget build(BuildContext context){
 		return Scaffold(
 		  appBar:AppBar(
