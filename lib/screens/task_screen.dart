@@ -17,6 +17,19 @@ class _TaskScreenState extends State<TaskScreen> {	//testing what we see when th
 	void _toggleTask(int index){
 	setState((){
 		_tasks[index].toggleDone();
+		final task = _tasks.removeAt(index);
+		if(task.isDone){
+		_tasks.add(task);	//moves the task to the end
+		}else{
+	       //reinsertion based on the time it was originally added
+		int insertIndex=_tasks.indexWhere((t)=>t.createdAt.isAfter(task.createdAt));
+		if(insertIndex==-1){
+		_tasks.add(task);
+		}
+		else{
+		_tasks.insert(insertIndex, task);
+		}
+	}
 });
 	}
 	
