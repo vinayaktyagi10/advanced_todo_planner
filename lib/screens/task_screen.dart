@@ -31,109 +31,168 @@ void _removeExpiredTasks(){
 	}
    }
 }
+TaskPriority _selectedPriority=TaskPriority.medium;
+void _showAddTaskDialog() {
+  String newTaskTitle = '';
+  TaskPriority newTaskPriority = TaskPriority.medium;
 
-void _showAddTaskDialog(){
-String newTaskTitle='';	//assigns a temp. variable to add a new task.
-showDialog(
-context: context,
-builder:(context){
-	return AlertDialog(	//this lets you add a task.
-	title: const Text('Add New Task'),
-content: SizedBox(
-    width: 300,  // fixed width
-    height: null, // fixed height
-		child:TextField(
-		keyboardType: TextInputType.multiline,
-		maxLines:null,		//makes it so the dialog box expands VERTICALLY.
-	 	autofocus: true,
-		textInputAction: TextInputAction.done,
-	 	decoration: const InputDecoration(hintText: 'Enter task'),
-	 	onChanged: (value){
-	  	newTaskTitle = value;
-		},
-		onSubmitted:(value) {  //lets you add using enter
-			if (value.trim().isNotEmpty){
-			 taskBox.add(Task(title: value.trim()));
-				Navigator.of(context).pop();
-				}
-			},
-      		),
-	),
-	actions: [
-	TextButton(
-	 onPressed: (){
-	  Navigator.of(context).pop();		//closes the dialog without adding a new task.
-},
-child: const Text('Cancel'),
-),
-TextButton(
-              onPressed: () {
-                if (newTaskTitle.trim().isNotEmpty) {
-                  taskBox.add(Task(title: newTaskTitle.trim()));
-                  Navigator.of(context).pop();
-                }
-              },
-              child: const Text('Add'),
+  showDialog(
+    context: context,
+    builder: (context) {
+      return StatefulBuilder(
+        builder: (context, setStateDialog) {
+          return AlertDialog(
+            title: const Text('Add New Task'),
+            content: SizedBox(
+              width: 300,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextField(
+                    keyboardType: TextInputType.multiline,
+                    maxLines: null,
+                    autofocus: true,
+                    textInputAction: TextInputAction.done,
+                    decoration: const InputDecoration(hintText: 'Enter task'),
+                    onChanged: (value) {
+                      newTaskTitle = value;
+                    },
+                    onSubmitted: (value) {
+                      if (value.trim().isNotEmpty) {
+                        taskBox.add(Task(
+                          title: value.trim(),
+                          priority: newTaskPriority,
+                        ));
+                        Navigator.of(context).pop();
+                      }
+                    },
+                  ),
+                  const SizedBox(height: 16),
+                  DropdownButton<TaskPriority>(
+                    value: newTaskPriority,
+                    onChanged: (value) {
+                      if (value != null) {
+                        setStateDialog(() {
+                          newTaskPriority = value;
+                        });
+                      }
+                    },
+                    items: TaskPriority.values.map((priority) {
+                      return DropdownMenuItem<TaskPriority>(
+                        value: priority,
+                        child: Text(priority.name.toUpperCase()),
+                      );
+                    }).toList(),
+                  ),
+                ],
+              ),
             ),
-          ],
-        );
-      },
-    );
-  }
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop(); // cancel
+                },
+                child: const Text('Cancel'),
+              ),
+              TextButton(
+                onPressed: () {
+                  if (newTaskTitle.trim().isNotEmpty) {
+                    taskBox.add(Task(
+                      title: newTaskTitle.trim(),
+                      priority: newTaskPriority,
+                    ));
+                    Navigator.of(context).pop();
+                  }
+                },
+                child: const Text('Add'),
+              ),
+            ],
+          );
+        },
+      );
+    },
+  );
+}
 
 
-void _showEditTaskDialog(Task task, int index){
-	String updatedTitle=task.title;
-	final controller = TextEditingController(text: task.title);
-showDialog(
-context:context,
-builder:(context){
-	return AlertDialog(
-	title: const Text('Edit Task'),
-	content: SizedBox(
-    	width: 300,  // fixed width
-    	height: null, // fixed height
-		child: TextField(
-      		keyboardType: TextInputType.multiline,
-      		maxLines: null,
-		   controller: controller,
-	           autofocus: true,        
-		   textInputAction: TextInputAction.done,
-		   onChanged: (value){
-				updatedTitle=value;
-						},
-		   onSubmitted:(value){
-				if(value.trim().isNotEmpty){
-				task.title=value.trim();
-				Navigator.of(context).pop();
-			}
-			},
-			),
-			),
-			actions:[
-			 TextButton(
-			   onPressed:(){
-				Navigator.of(context).pop();
-			   },
-			   child:const Text('Cancel'),
-			   ),
-			 TextButton(
-			   onPressed:() async{
-				if(updatedTitle.trim().isNotEmpty){
-				task.title=updatedTitle.trim();
-				await task.save();
-				await taskBox.putAt(index, task);
-				setState(() {}); 
-				Navigator.of(context).pop();
-				}
-							},
-			  child: const Text('Save'),
-						),
-					],
-				);
-			},
-		);
-	}
+void _showEditTaskDialog(Task task, int index) {
+  String updatedTitle = task.title;
+  TaskPriority updatedPriority = task.priority ?? TaskPriority.medium;
+  final controller = TextEditingController(text: task.title);
+
+  showDialog(
+    context: context,
+    builder: (context) {
+      return AlertDialog(
+        title: const Text('Edit Task'),
+        content: SizedBox(
+          width: 300,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                controller: controller,
+                keyboardType: TextInputType.multiline,
+                maxLines: null,
+                autofocus: true,
+                textInputAction: TextInputAction.done,
+                onChanged: (value) {
+                  updatedTitle = value;
+                },
+                onSubmitted: (value) {
+                  if (value.trim().isNotEmpty) {
+                    task.title = value.trim();
+                    task.priority = updatedPriority;
+                    task.save();
+                    Navigator.of(context).pop();
+                  }
+                },
+              ),
+              const SizedBox(height: 16),
+              DropdownButton<TaskPriority>(
+                value: updatedPriority,
+                onChanged: (value) {
+                  if (value != null) {
+                    setState(() {
+                      updatedPriority = value;
+                    });
+                  }
+                },
+                items: TaskPriority.values.map((priority) {
+                  return DropdownMenuItem<TaskPriority>(
+                    value: priority,
+                    child: Text(priority.name.toUpperCase()),
+                  );
+                }).toList(),
+              ),
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () async {
+              if (updatedTitle.trim().isNotEmpty) {
+                task.title = updatedTitle.trim();
+                task.priority = updatedPriority;
+                await task.save();
+                await taskBox.putAt(index, task);
+                setState(() {});
+                Navigator.of(context).pop();
+              }
+            },
+            child: const Text('Save'),
+          ),
+        ],
+      );
+    },
+  );
+}
 
 void _toggleTask(Task task) async {
   task.toggleDone();

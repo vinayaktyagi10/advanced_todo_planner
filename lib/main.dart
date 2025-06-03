@@ -7,6 +7,7 @@ import 'screens/task_screen.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Hive.initFlutter();
+Hive.registerAdapter(TaskPriorityAdapter());
   Hive.registerAdapter(TaskAdapter());
   await Hive.openBox<Task>('tasks');
   runApp(const MyApp());
