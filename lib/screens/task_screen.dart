@@ -107,6 +107,7 @@ builder:(context){
 			   onPressed:() async{
 				if(updatedTitle.trim().isNotEmpty){
 				task.title=updatedTitle.trim();
+				await task.save();
 				await taskBox.putAt(index, task);
 				setState(() {}); 
 				Navigator.of(context).pop();
@@ -159,9 +160,6 @@ Widget build(BuildContext context) {
   );
   }
 return Scaffold(
-    appBar: AppBar(
-      title: const Text('Advanced Todo Planner'),
-    ),
     body: ValueListenableBuilder<Box<Task>>(
       valueListenable: taskBox.listenable(),
       builder: (context, box, _) {
@@ -176,12 +174,19 @@ return Scaffold(
 	onReorder: _onReorder,
           itemBuilder: (context, index) {
             final task = tasks[index];
-            return ListTile(
-		key: ValueKey(task.key),
+	return Card(
+	key: ValueKey(task.key),
+	
+  margin: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+  elevation: 2,
+  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            child: ListTile(
               title: Text(
                 task.title,
                 style: TextStyle(
                   decoration: task.isDone ? TextDecoration.lineThrough : null,
+		color: task.isDone ? Colors.grey : Colors.black87,
+        	fontSize: 18,
                 ),
 	       ),
 		onTap:(){
@@ -197,13 +202,14 @@ return Scaffold(
                     },
                   ),
                   IconButton(
-                    icon: const Icon(Icons.delete),
+		icon: Icon(Icons.delete, color: Colors.redAccent),
                     onPressed: () {
                       box.deleteAt(index);
                     },
                   ),
                 ],
               ),
+	     ),
             );
           },
         );
