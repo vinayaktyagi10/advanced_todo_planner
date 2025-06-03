@@ -90,6 +90,20 @@ void _toggleTask(Task task) async {
     await taskBox.add(t);
   }
 }
+	void _onReorder(int oldIndex, int newIndex) //start HERE
+	async{
+			final tasks=taskBox.values.toList();
+			if(newIndex>oldIndex){
+			newIndex-=1;
+			}
+			final task= tasks.removeAt(oldIndex);
+			tasks.insert(newIndex, task);
+			await taskBox.clear();
+			for(final t in tasks){
+			await taskBox.add(t);
+		}
+	       }
+
 
 @override
 Widget build(BuildContext context) {
@@ -111,11 +125,13 @@ return Scaffold(
           return const Center(child: Text('No tasks yet!'));
         }
 
-        return ListView.builder(
+        return ReorderableListView.builder(
           itemCount: tasks.length,
+	onReorder: _onReorder,
           itemBuilder: (context, index) {
             final task = tasks[index];
             return ListTile(
+		key: ValueKey(task.key),
               title: Text(
                 task.title,
                 style: TextStyle(
