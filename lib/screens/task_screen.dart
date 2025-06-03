@@ -74,6 +74,52 @@ TextButton(
     );
   }
 
+
+void _showEditTaskDialog(Task task, int index){
+	String updatedTitle=task.title;
+	final controller = TextEditingController(text: task.title);
+showDialog(
+context:context,
+builder:(context){
+	return AlertDialog(
+	title: const Text('Edit Task'),
+		content:TextField(
+		   controller: controller,
+	           autofocus: true,        
+		   onChanged: (value){
+				updatedTitle=value;
+						},
+		   onSubmitted:(value){
+				if(value.trim().isNotEmpty){
+				task.title=value.trim();
+				Navigator.of(context).pop();
+			}
+			},
+			),
+			actions:[
+			 TextButton(
+			   onPressed:(){
+				Navigator.of(context).pop();
+			   },
+			   child:const Text('Cancel'),
+			   ),
+			 TextButton(
+			   onPressed:() async{
+				if(updatedTitle.trim().isNotEmpty){
+				task.title=updatedTitle.trim();
+				await taskBox.putAt(index, task);
+				setState(() {}); 
+				Navigator.of(context).pop();
+				}
+							},
+			  child: const Text('Save'),
+						),
+					],
+				);
+			},
+		);
+	}
+
 void _toggleTask(Task task) async {
   task.toggleDone();
   await task.save();
@@ -137,7 +183,10 @@ return Scaffold(
                 style: TextStyle(
                   decoration: task.isDone ? TextDecoration.lineThrough : null,
                 ),
-              ),
+	       ),
+		onTap:(){
+		_showEditTaskDialog(task, index);
+									},
               trailing: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
