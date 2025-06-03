@@ -39,8 +39,14 @@ context: context,
 builder:(context){
 	return AlertDialog(	//this lets you add a task.
 	title: const Text('Add New Task'),
-		content: TextField(
+content: SizedBox(
+    width: 300,  // fixed width
+    height: null, // fixed height
+		child:TextField(
+		keyboardType: TextInputType.multiline,
+		maxLines:null,		//makes it so the dialog box expands VERTICALLY.
 	 	autofocus: true,
+		textInputAction: TextInputAction.done,
 	 	decoration: const InputDecoration(hintText: 'Enter task'),
 	 	onChanged: (value){
 	  	newTaskTitle = value;
@@ -52,6 +58,7 @@ builder:(context){
 				}
 			},
       		),
+	),
 	actions: [
 	TextButton(
 	 onPressed: (){
@@ -83,9 +90,15 @@ context:context,
 builder:(context){
 	return AlertDialog(
 	title: const Text('Edit Task'),
-		content:TextField(
+	content: SizedBox(
+    	width: 300,  // fixed width
+    	height: null, // fixed height
+		child: TextField(
+      		keyboardType: TextInputType.multiline,
+      		maxLines: null,
 		   controller: controller,
 	           autofocus: true,        
+		   textInputAction: TextInputAction.done,
 		   onChanged: (value){
 				updatedTitle=value;
 						},
@@ -95,6 +108,7 @@ builder:(context){
 				Navigator.of(context).pop();
 			}
 			},
+			),
 			),
 			actions:[
 			 TextButton(
@@ -175,6 +189,7 @@ return Scaffold(
           itemBuilder: (context, index) {
             final task = tasks[index];
 	return Card(
+	
 	key: ValueKey(task.key),
 	
   margin: EdgeInsets.symmetric(horizontal: 12, vertical: 6),

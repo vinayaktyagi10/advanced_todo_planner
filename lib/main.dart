@@ -33,23 +33,44 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'My Planner',
-      theme: ThemeData(
-        primarySwatch: Colors.deepPurple,
-        brightness: Brightness.light,
-      ),
-      darkTheme: ThemeData(
-        brightness: Brightness.dark,
-        primarySwatch: Colors.deepPurple,
-        scaffoldBackgroundColor: Colors.black,
-        appBarTheme: const AppBarTheme(
-          backgroundColor: Colors.deepPurple,
-          foregroundColor: Colors.white,
-        ),
-        floatingActionButtonTheme: const FloatingActionButtonThemeData(
-          backgroundColor: Colors.deepPurple,
-        ),
-      ),
-      themeMode: _themeMode, // Use current theme mode
+theme: ThemeData(
+  brightness: Brightness.light,
+  primarySwatch: Colors.deepPurple,
+  scaffoldBackgroundColor: Colors.white,
+  floatingActionButtonTheme: const FloatingActionButtonThemeData(
+    backgroundColor: Colors.deepPurple, 
+  ),
+  appBarTheme: const AppBarTheme(
+    backgroundColor: Colors.deepPurple,
+    foregroundColor: Colors.white,
+  ),
+  textTheme: const TextTheme(
+    bodyLarge: TextStyle(color: Colors.black87),
+    bodyMedium: TextStyle(color: Colors.black87),
+    displayLarge: TextStyle(color: Colors.deepPurple),
+    // add more styles if you want
+  ),
+),
+
+darkTheme: ThemeData(
+  brightness: Brightness.dark,
+  primarySwatch: Colors.deepPurple,
+  scaffoldBackgroundColor: Colors.black,
+  floatingActionButtonTheme: const FloatingActionButtonThemeData(
+    backgroundColor: Colors.orange, 
+  ),
+  appBarTheme: const AppBarTheme(
+    backgroundColor: Colors.deepPurple,
+    foregroundColor: Colors.white,
+  ),
+  textTheme: const TextTheme(
+    bodyLarge: TextStyle(color: Colors.white70),
+    bodyMedium: TextStyle(color: Colors.white70),
+    displayLarge: TextStyle(color: Colors.orangeAccent),
+    // add more styles if you want
+  ),
+),
+      themeMode: _themeMode,
       home: TaskScreenWithThemeToggle(
         toggleTheme: _toggleTheme,
         themeMode: _themeMode,
@@ -76,14 +97,18 @@ class TaskScreenWithThemeToggle extends StatelessWidget {
         actions: [
           IconButton(
             icon: Icon(
-              themeMode == ThemeMode.dark ? Icons.wb_sunny : Icons.nightlight_round,
+              themeMode == ThemeMode.dark
+                  ? Icons.wb_sunny
+                  : Icons.nightlight_round,
             ),
             onPressed: toggleTheme,
-            tooltip: themeMode == ThemeMode.dark ? 'Switch to Light Mode' : 'Switch to Dark Mode',
+            tooltip: themeMode == ThemeMode.dark
+                ? 'Switch to Light Mode'
+                : 'Switch to Dark Mode',
           ),
         ],
       ),
-      body: const TaskScreen(), // Your existing TaskScreen
+      body: const TaskScreen(),
     );
   }
 }
