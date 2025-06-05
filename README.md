@@ -3,6 +3,8 @@
 A simple yet powerful Flutter-based to-do list app that helps you manage tasks efficiently.
 Add, complete, and delete tasks easily, with intuitive UI and smooth interactions.
 
+🔍 **Status**: Archived as of June 2025 — this project served as a personal practice app to explore Flutter, Dart, state management, and local persistence using Hive.
+
 ---
 
 ## Features
@@ -12,12 +14,19 @@ Add, complete, and delete tasks easily, with intuitive UI and smooth interaction
 * Delete tasks individually with a dedicated delete button
 * Dynamic task list that updates in real-time
 * Clean and minimal UI using Flutter’s Material Design components
+* Auto-remove tasks after 24 hours or on day change
+* Reorder tasks to push completed ones to the bottom (original order preserved)
+* Dark mode support
 
 ---
 
 ## Screenshots
 
-*Coming soon*
+![Dark Mode](assets/screenshots/Dark_Mode.png)
+![Light Mode](assets/screenshots/Light_Mode.png)
+![Adding New Task](assets/screenshots/Add_new_task.png)
+![Editing a Task](assets/screenshots/Edit_task.png)
+![Priority Order](assets/screenshots/Priority.png)
 
 ---
 
@@ -58,15 +67,6 @@ Add, complete, and delete tasks easily, with intuitive UI and smooth interaction
 * Type your task in the dialog and press **Enter** or tap **Add**.
 * Check the checkbox to mark a task as completed (it will be crossed out).
 * Tap the trash icon to delete a task.
-
----
-
-## Planned Features
-
-* Auto-remove tasks after 24 hours or on day change
-* Reorder tasks to push completed ones to the bottom (original order preserved)
-* Google Calendar synchronization for reminders
-* Dark mode support
 
 ---
 

@@ -120,78 +120,82 @@ void _showEditTaskDialog(Task task, int index) {
   TaskPriority updatedPriority = task.priority ?? TaskPriority.medium;
   final controller = TextEditingController(text: task.title);
 
-  showDialog(
-    context: context,
-    builder: (context) {
-      return AlertDialog(
-        title: const Text('Edit Task'),
-        content: SizedBox(
-          width: 300,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextField(
-                controller: controller,
-                keyboardType: TextInputType.multiline,
-                maxLines: null,
-                autofocus: true,
-                textInputAction: TextInputAction.done,
-                onChanged: (value) {
-                  updatedTitle = value;
-                },
-                onSubmitted: (value) {
-                  if (value.trim().isNotEmpty) {
-                    task.title = value.trim();
-                    task.priority = updatedPriority;
-                    task.save();
-                    Navigator.of(context).pop();
-                  }
-                },
-              ),
-              const SizedBox(height: 16),
-              DropdownButton<TaskPriority>(
-                value: updatedPriority,
-                onChanged: (value) {
-                  if (value != null) {
-                    setState(() {
-                      updatedPriority = value;
-                    });
-                  }
-                },
-                items: TaskPriority.values.map((priority) {
-                  return DropdownMenuItem<TaskPriority>(
-                    value: priority,
-                    child: Text(priority.name.toUpperCase()),
-                  );
-                }).toList(),
-              ),
-            ],
+showDialog(
+  context: context,
+  builder: (context) {
+    return StatefulBuilder(
+      builder: (context, setStateDialog) {
+        return AlertDialog(
+          title: const Text('Edit Task'),
+          content: SizedBox(
+            width: 300,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextField(
+                  controller: controller,
+                  keyboardType: TextInputType.multiline,
+                  maxLines: null,
+                  autofocus: true,
+                  textInputAction: TextInputAction.done,
+                  onChanged: (value) {
+                    updatedTitle = value;
+                  },
+                  onSubmitted: (value) {
+                    if (value.trim().isNotEmpty) {
+                      task.title = value.trim();
+                      task.priority = updatedPriority;
+                      task.save();
+                      Navigator.of(context).pop();
+                    }
+                  },
+                ),
+                const SizedBox(height: 16),
+                DropdownButton<TaskPriority>(
+                  value: updatedPriority,
+                  onChanged: (value) {
+                    if (value != null) {
+                      setStateDialog(() {
+                        updatedPriority = value;
+                      });
+                    }
+                  },
+                  items: TaskPriority.values.map((priority) {
+                    return DropdownMenuItem<TaskPriority>(
+                      value: priority,
+                      child: Text(priority.name.toUpperCase()),
+                    );
+                  }).toList(),
+                ),
+              ],
+            ),
           ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            child: const Text('Cancel'),
-          ),
-          TextButton(
-            onPressed: () async {
-              if (updatedTitle.trim().isNotEmpty) {
-                task.title = updatedTitle.trim();
-                task.priority = updatedPriority;
-                await task.save();
-                await taskBox.putAt(index, task);
-                setState(() {});
+          actions: [
+            TextButton(
+              onPressed: () {
                 Navigator.of(context).pop();
-              }
-            },
-            child: const Text('Save'),
-          ),
-        ],
-      );
-    },
-  );
+              },
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () async {
+                if (updatedTitle.trim().isNotEmpty) {
+                  task.title = updatedTitle.trim();
+                  task.priority = updatedPriority;
+                  await task.save();
+                  await taskBox.putAt(index, task);
+                  setState(() {});
+                  Navigator.of(context).pop();
+                }
+              },
+              child: const Text('Save'),
+            ),
+          ],
+        );
+      },
+    );
+  },
+);
 }
 
 void _toggleTask(Task task) async {
